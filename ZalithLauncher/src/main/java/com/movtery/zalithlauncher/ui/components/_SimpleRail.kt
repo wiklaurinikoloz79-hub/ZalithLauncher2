@@ -13,7 +13,7 @@
  * See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.txt>.
  */
 
 package com.movtery.zalithlauncher.ui.components
@@ -45,25 +45,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.movtery.zalithlauncher.ui.screens.content.elements.DisabledAlpha
 
 /**
- * 导航栏item组件，可包含图标与文字。当item被选中时，
- * 会触发一个从中心向外扩展的胶囊形背景动画。
- *
- * @param text 用于定义item中文字内容的可组合函数
- * @param onClick 当该item被点击时调用的回调函数
- * @param selected 指示该item当前是否处于选中状态
- *                 选中动画的播放由此状态控制
- * @param icon 用于定义显示图标的可组合函数，图标显示在文字之前。
- * @param selectedPadding item被选中时，其内部内容的内边距
- * @param unSelectedPadding item未被选中时，其内部内容的内边距
- * @param shape 定义item裁剪边界与点击区域的形状。
- * @param backgroundColor item被选中时，显示的动画背景颜色。
- * @param selectedContentColor item被选中时，图标与文字的颜色。
- * @param unselectedContentColor item未被选中时，图标与文字的颜色。
+ * Navigation rail item with an icon and text. When selected, a capsule
+ * background expands from the center outwards.
  */
 @Composable
 fun TextRailItem(
@@ -75,8 +64,8 @@ fun TextRailItem(
     selectedPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     unSelectedPadding: PaddingValues = selectedPadding,
     shape: Shape = MaterialTheme.shapes.extraLarge,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    selectedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
+    selectedContentColor: Color = MaterialTheme.colorScheme.primary,
     unselectedContentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     enabled: Boolean = true
 ) {
@@ -101,7 +90,6 @@ fun TextRailItem(
             val maxWidth = size.width
             val minWidth = 0f
             val currentWidth = minWidth + (maxWidth - minWidth) * animationProgress
-
             val left = (maxWidth - currentWidth) / 2
 
             //绘制胶囊形状背景
@@ -110,6 +98,14 @@ fun TextRailItem(
                 topLeft = Offset(left, 0f),
                 size = Size(currentWidth, size.height),
                 cornerRadius = CornerRadius(size.height / 2, size.height / 2)
+            )
+            //绘制胶囊轮廓
+            drawRoundRect(
+                color = selectedContentColor.copy(alpha = 0.6f),
+                topLeft = Offset(left, 0f),
+                size = Size(currentWidth, size.height),
+                cornerRadius = CornerRadius(size.height / 2, size.height / 2),
+                style = Stroke(width = 1.5.dp.toPx())
             )
         }
 
